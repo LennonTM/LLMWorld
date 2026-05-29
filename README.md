@@ -5,7 +5,7 @@ perceives the grid, walks around, reads the word carved on a door (only when it
 gets close enough), collects the scattered letters that spell the word, and
 unlocks the door. You decide when Claude runs.
 
-## Showcase Recording of the Solution
+## Solution
 
 [Visit Showcase](https://www.youtube.com/watch?v=HuauyIk_Tr8)
 
