@@ -12,16 +12,18 @@ const ICON: Record<LogEntry['kind'], string> = {
 }
 
 export function LogPanel({ log }: { log: LogEntry[] }) {
-  const endRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    // Scroll the log container itself, not the page — keeps the map in view.
+    const el = listRef.current
+    if (el) el.scrollTop = el.scrollHeight
   }, [log])
 
   return (
     <div className="panel log">
       <h2>Claude's activity</h2>
-      <div className="log-list">
+      <div className="log-list" ref={listRef}>
         {log.length === 0 && (
           <p className="empty">
             Press <strong>Run Claude</strong> or <strong>Step</strong> to begin.
@@ -34,7 +36,6 @@ export function LogPanel({ log }: { log: LogEntry[] }) {
             <span className="log-text">{e.text}</span>
           </div>
         ))}
-        <div ref={endRef} />
       </div>
     </div>
   )

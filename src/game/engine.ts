@@ -41,6 +41,14 @@ const inBounds = (s: GameState, p: Pos) =>
 export const letterAt = (s: GameState, p: Pos) =>
   s.letters.find((l) => l.x === p.x && l.y === p.y)
 
+/**
+ * A letter is only perceivable to the agent when it is standing on or right
+ * next to it (within one tile, including diagonals). Anything further away is
+ * hidden from the observation so the agent has to actually explore to find it.
+ */
+export const letterVisible = (s: GameState, p: Pos) =>
+  Math.max(Math.abs(p.x - s.agent.x), Math.abs(p.y - s.agent.y)) <= 1
+
 /** Orthogonally adjacent to the door (close enough to read / unlock it). */
 export function adjacentToDoor(s: GameState): boolean {
   return Object.values(DELTA).some((d) => {
@@ -175,7 +183,8 @@ function fail(state: GameState, message: string) {
 
 /**
  * A textual observation Claude reads each turn: an ASCII map plus structured
- * facts. The door's word is only revealed when Claude is standing next to it.
+ * facts. The door's word is only revealed when Claude is standing next to it,
+ * and letters are only shown when Claude is on or next to their tile.
  */
 export function buildObservation(s: GameState): string {
   const rows: string[] = []
@@ -188,7 +197,7 @@ export function buildObservation(s: GameState): string {
       else if (isWall(s, p)) row += '#'
       else {
         const lt = letterAt(s, p)
-        row += lt ? lt.char : '.'
+        row += lt && letterVisible(s, p) ? lt.char : '.'
       }
     }
     rows.push(row)
@@ -199,11 +208,12 @@ export function buildObservation(s: GameState): string {
     ? `You are next to the door. The word carved on it reads: "${s.door.word}". Spell it to unlock.`
     : `A door is at (${s.door.x}, ${s.door.y}). You must stand next to it to read the word carved on it.`
 
-  const lettersLine = s.letters.length
-    ? s.letters
+  const visibleLetters = s.letters.filter((l) => letterVisible(s, l))
+  const lettersLine = visibleLetters.length
+    ? visibleLetters
         .map((l) => `"${l.char}" at (${l.x}, ${l.y})`)
         .join(', ')
-    : 'none remaining on the ground'
+    : 'none in sight — you only notice a letter when standing on or next to it, so move around to discover them'
 
   const standing = letterAt(s, s.agent)
 
@@ -212,11 +222,11 @@ export function buildObservation(s: GameState): string {
     'Map (x increases right, y increases down):',
     rows.join('\n'),
     '',
-    'Legend: @ = you, # = wall, D = door, A-Z = a letter on the ground, . = floor.',
+    'Legend: @ = you, # = wall, D = door, A-Z = a letter you can see (only shown on or next to your tile), . = floor or an as-yet-unseen tile.',
     `You are at (${s.agent.x}, ${s.agent.y}).` +
       (standing ? ` There is a letter "${standing.char}" on your tile.` : ''),
     `Inventory (letters you carry): [${s.inventory.join(', ') || 'empty'}].`,
-    `Letters on the ground: ${lettersLine}.`,
+    `Letters you can see right now: ${lettersLine}.`,
     doorLine,
     s.won ? 'STATUS: This level is COMPLETE.' : 'STATUS: door is locked.',
   ].join('\n')

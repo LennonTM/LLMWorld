@@ -44,9 +44,11 @@ export interface Config {
 
 const DEFAULT_CONFIG: Config = {
   model: 'claude-opus-4-8',
-  effort: 'low',
-  delayMs: 600,
+  effort: 'low', // "snappy" — least thinking, fastest turns
+  delayMs: 250,
 }
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 function describeTool(tu: ToolUseBlock): string {
   if (tu.name === 'move') return `move ${tu.input.direction}`
@@ -163,7 +165,8 @@ export function useLLMWorld() {
       } else {
         let next = stateRef.current
         const results: ToolResultBlock[] = []
-        for (const tu of toolUses) {
+        for (let i = 0; i < toolUses.length; i++) {
+          const tu = toolUses[i]
           const out = executeTool(next, tu.name, tu.input)
           next = out.state
           addLog(
@@ -176,9 +179,14 @@ export function useLLMWorld() {
             content: out.result.message + '\n\n' + buildObservation(next),
             is_error: !out.result.ok,
           })
+          // Render each action individually so a multi-action turn animates
+          // one tile at a time instead of jumping several blocks at once.
+          stateRef.current = next
+          setState(next)
+          if (i < toolUses.length - 1) {
+            await sleep(Math.min(configRef.current.delayMs, 300))
+          }
         }
-        stateRef.current = next
-        setState(next)
         messagesRef.current.push({ role: 'user', content: results })
 
         if (next.won) {

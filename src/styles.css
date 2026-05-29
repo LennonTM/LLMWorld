@@ -53,6 +53,10 @@ main {
   main {
     grid-template-columns: 1fr;
   }
+  .side {
+    position: static;
+    max-height: none;
+  }
 }
 
 .stage {
@@ -61,7 +65,20 @@ main {
   border-radius: 16px;
   padding: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Log lives inside the stage box, so drop its own panel chrome and
+   separate it from the map with a divider instead. */
+.stage .log {
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 16px 2px 0;
 }
 
 .grid-wrap {
@@ -134,6 +151,9 @@ main {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
 }
 
 .panel {
@@ -258,9 +278,12 @@ button:disabled {
 
 .log {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 .log-list {
-  max-height: 460px;
+  height: 180px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

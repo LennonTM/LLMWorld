@@ -12,7 +12,7 @@ THE WORLD
 
 YOUR GOAL
 - Each level has one door with a word carved on it. You can only read that word when you are standing on a tile orthogonally adjacent to the door.
-- Scattered around the grid are letters. To unlock the door you must collect (pick up) the letters that spell the door's word, then stand next to the door and unlock it.
+- Scattered around the grid are letters, but you can only perceive a letter when you are standing on it or right next to it (within one tile). Hidden letters look like ordinary floor (.), so you must explore to find them. To unlock the door you must collect (pick up) the letters that spell the door's word, then stand next to the door and unlock it.
 - Some levels include decoy letters that are not part of the word. You can ignore them, or pick one up and drop it elsewhere — but remember a tile can only hold one letter, so you can only drop onto an empty tile.
 
 YOUR TOOLS

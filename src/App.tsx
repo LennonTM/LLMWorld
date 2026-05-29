@@ -20,6 +20,7 @@ export default function App() {
       <main>
         <section className="stage">
           <GridView state={world.state} />
+          <LogPanel log={world.log} />
         </section>
 
         <aside className="side">
@@ -37,7 +38,6 @@ export default function App() {
             step={world.step}
             reset={world.reset}
           />
-          <LogPanel log={world.log} />
         </aside>
       </main>
     </div>
