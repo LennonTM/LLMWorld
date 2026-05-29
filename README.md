@@ -86,6 +86,10 @@ together. Open **http://localhost:5173** and press **Run Claude**.
 npm run build     # typecheck + production bundle into dist/
 ```
 
+##Example logs
+<img width="1520" height="827" alt="image" src="https://github.com/user-attachments/assets/5b1bc827-7648-4bee-88d3-36761d0234f2" />
+
+
 ## Adding a level
 
 Append a `Level` to `LEVELS` in `src/game/levels.ts`: set `width`/`height`,
