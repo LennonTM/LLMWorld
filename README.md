@@ -5,7 +5,7 @@ perceives the grid, walks around, reads the word carved on a door (only when it
 gets close enough), collects the scattered letters that spell the word, and
 unlocks the door. You decide when Claude runs.
 
-![concept](https://img.shields.io/badge/Claude-grid%20agent-6ea8fe)
+[Visit Showcase](https://www.youtube.com/watch?v=HuauyIk_Tr8)
 
 ## How it works
 
@@ -85,10 +85,6 @@ together. Open **http://localhost:5173** and press **Run Claude**.
 ```bash
 npm run build     # typecheck + production bundle into dist/
 ```
-
-## Example logs
-<img width="1520" height="827" alt="image" src="https://github.com/user-attachments/assets/5b1bc827-7648-4bee-88d3-36761d0234f2" />
-
 
 ## Adding a level
 
